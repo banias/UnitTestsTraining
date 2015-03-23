@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace UnitTestsTraining
 {
-    public class PasswordCryptograhy
+    public class PasswordCryptography
     {
         private const string HashPrefix = "#¶µ•#‡";
 
-	public static bool IsPasswordHash(string text)
+	public bool IsPasswordHash(string text)
 	{
 	    return !string.IsNullOrEmpty(text) && text.StartsWith(HashPrefix) && text.Length == 50;
 	}
