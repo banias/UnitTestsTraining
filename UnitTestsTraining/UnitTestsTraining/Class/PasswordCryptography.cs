@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace UnitTestsTraining
 {
-    public class PasswordCryptography
+    public interface IPasswordCryptography
+    {
+        bool IsPasswordHash(string text);
+        string GenerateHash(string input);
+    }
+
+    public class PasswordCryptography : IPasswordCryptography
     {
         private const string HashPrefix = "#¶µ•#‡";
 

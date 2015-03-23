@@ -48,7 +48,8 @@
     <Compile Include="Class\PasswordCryptography.cs" />
     <Compile Include="Class\UserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\PasswordCryptographyExpectationsTests.cs" />
+    <Compile Include="Tests\PasswordCryptographyTests.cs" />
+    <Compile Include="Tests\UserManagerTests.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

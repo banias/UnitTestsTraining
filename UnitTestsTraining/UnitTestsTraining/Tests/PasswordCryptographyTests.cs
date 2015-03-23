@@ -76,6 +76,28 @@ namespace UnitTestsTraining.Tests
             return result;
         }
 
+	[Test]
+	public void BadAssertionExample()
+	{
+	    //Arrange
+	    const string password = "alamakota";
+	    //Act
+	    var result = _passwordCryptography.GenerateHash(password);
+	    //Assert
+	    Assert.True(result == "#¶µ•#‡j37t9qlc9oYSDguVsOUF/czZ8r62ZXkYLATckeCXKCc=!!!");
+	}
+
+        [Test]
+        public void GoodAssertionExample()
+        {
+            //Arrange
+            const string password = "alamakota";
+            //Act
+            var result = _passwordCryptography.GenerateHash(password);
+            //Assert
+            Assert.That(result, Is.EqualTo("#¶µ•#‡j37t9qlc9oYSDguVsOUF/czZ8r62ZXkYLATckeCXKCc=!!!"));
+        }
+
 
 
 

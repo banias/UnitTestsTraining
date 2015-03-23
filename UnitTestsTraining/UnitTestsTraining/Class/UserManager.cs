@@ -10,18 +10,24 @@ namespace UnitTestsTraining.Class
     public class UserManager
     {
         private IUserRepository _userRepository;
-        private PasswordCryptography _passwordCryptography;
-        private PasswordGenerator _passwordGenerator;
+        private IPasswordCryptography _passwordCryptography;
+        private IPasswordGenerator _passwordGenerator;
         private IMailSender _mailSender;
         private ILog _log;
 
         public UserManager(IUserRepository userRepository, IMailSender mailSender, ILog log)
-	{
-	    _userRepository = userRepository;
+            : this(userRepository, mailSender, log, new PasswordCryptography(), new PasswordGenerator())
+        {
+        }
+
+        public UserManager(IUserRepository userRepository, IMailSender mailSender, ILog log, IPasswordCryptography passwordCryptography, IPasswordGenerator passwordGenerator)
+        {
+            _userRepository = userRepository;
             _log = log;
             _mailSender = mailSender;
-	    _passwordCryptography = new PasswordCryptography();
-	}
+            _passwordCryptography = passwordCryptography;
+            _passwordGenerator = passwordGenerator;
+        }
 	public void ResetPassword(User user)
 	{
 	    try
@@ -63,18 +69,23 @@ namespace UnitTestsTraining.Class
         void SendEmail(string email, string createNewPasswordBody, string newPassword);
     }
 
-    public class PasswordGenerator
+    public interface IPasswordGenerator
+    {
+        string GenerateRandomPassword();
+    }
+
+    public class PasswordGenerator : IPasswordGenerator
     {
         public string GenerateRandomPassword()
         {
-            throw new NotImplementedException();
+            return "4242424242422424";
         }
     }
 
     public interface IUserRepository
     {
-	 void StartTransaction();
-         void Commit();
+        void StartTransaction();
+        void Commit();
         void UpdateUser(User user);
         void Rollback();
     }
