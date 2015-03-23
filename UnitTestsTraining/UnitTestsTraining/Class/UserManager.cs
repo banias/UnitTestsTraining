@@ -30,6 +30,8 @@ namespace UnitTestsTraining.Class
         }
 	public void ResetPassword(User user)
 	{
+	    if (user == null)
+	        throw new ArgumentException("User is null", "user");
 	    try
 	    {
 	        _userRepository.StartTransaction();

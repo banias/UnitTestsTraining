@@ -76,6 +76,11 @@ namespace UnitTestsTraining.Tests
             return result;
         }
 
+
+	//Intentionally failing test to show the difference in failure description 
+        //when using diffrent assertion methods
+
+	//Shows only that True was expected, which is meaningless when comparing strings
 	[Test]
 	public void BadAssertionExample()
 	{
@@ -87,6 +92,7 @@ namespace UnitTestsTraining.Tests
 	    Assert.True(result == "#¶µ•#‡j37t9qlc9oYSDguVsOUF/czZ8r62ZXkYLATckeCXKCc=!!!");
 	}
 
+	//Shows where exactly the expected string differs from the actual result
         [Test]
         public void GoodAssertionExample()
         {

@@ -97,8 +97,9 @@ namespace UnitTestsTraining.Tests
         }
 
 	//AAA syntax 
+	//Bad assertions
         [Test]
-        public void ShouldSendEmail_WhenPasswordIsReset_AAAsyntax()
+        public void ShouldSendEmailToCorrectEmailAndWithCorrectMessageAndWithCorrectTitle_WhenPasswordIsReset_AAAsyntax()
         {
 	    //Arrange
             const string email = "mail@mail.com";
@@ -110,11 +111,15 @@ namespace UnitTestsTraining.Tests
 	    //Act
 	    _userManager.ResetPassword(user);
 	    //Assert
-            _mailSender.AssertWasCalled(x => x.SendEmail(email, "Your new password is: newPass", "New Password"));
+            _mailSender.AssertWasCalled(x => x.SendEmail(
+                email, 
+                "Your new password is: newPass", 
+                "New Password"));
         }
 
+	//Better but still there are two assertions in a single test
         [Test]
-        public void ShouldSendEmail_WhenPasswordIsReset_AssertEmailOnly()
+        public void ShouldSendEmailToCorrectEmailAndSendOneEmailOnlyOnce_WhenPasswordIsReset()
         {
             //Arranger
             const string email = "mail@mail.com";
@@ -127,9 +132,44 @@ namespace UnitTestsTraining.Tests
             _userManager.ResetPassword(user);
             //Assert
             _mailSender.AssertWasCalled(
-                x => x.SendEmail(Arg<string>.Matches(a => a == email), Arg<string>.Is.Anything, Arg<string>.Is.Anything));
+                x => x.SendEmail(Arg<string>.Matches(a => a == email),
+			         Arg<string>.Is.Anything, 
+			         Arg<string>.Is.Anything), o => o.Repeat.Once());
         }
 
+	//A proper UnitTest :)
+        [Test]
+        public void ShouldSendEmailWithNewPassword_WhenPasswordIsReset_AssertEmailText()
+        {
+            //Arranger
+            const string email = "mail@mail.com";
+            const string newPassword = "newPass";
+            const string passwordHash = "hash";
+            var user = new User() { Email = email };
+            _passwordGenerator.Stub(x => x.GenerateRandomPassword()).Return(newPassword);
+            _passwordCryptography.Stub(x => x.GenerateHash(newPassword)).Return(passwordHash);
+            //Act
+            _userManager.ResetPassword(user);
+            //Assert
+            _mailSender.AssertWasCalled(
+                x => x.SendEmail(Arg<string>.Is.Anything,
+                     Arg<string>.Matches(a => a.Contains(newPassword)),
+                     Arg<string>.Is.Anything));
+        }
+
+        [Test]
+        public void RestPasswordShouldThrowArgumentExceptionWhen_WhenUserIsNull()
+        {
+            //Arranger
+            const string newPassword = "newPass";
+            const string passwordHash = "hash";
+            _passwordGenerator.Stub(x => x.GenerateRandomPassword()).Return(newPassword);
+            _passwordCryptography.Stub(x => x.GenerateHash(newPassword)).Return(passwordHash);
+            //Act/Assert
+            Assert.That(() => _userManager.ResetPassword(null), 
+                Throws.Exception.TypeOf<ArgumentException>());
+
+        }
 
     }
 }
